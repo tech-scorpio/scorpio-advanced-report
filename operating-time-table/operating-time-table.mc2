@@ -1,0 +1,180 @@
+{
+  'vars' {
+    'dateRange' [
+      NOW 1 d -
+      NOW
+    ]
+  }
+  'options' {
+    'scheme' 'NINETEEN_EIGHTY_FOUR'
+    'customStyles' {
+      '.discovery-tile'
+      <'
+          background-color: #3A3C4622;
+          border-radius: 50px;
+      '>
+
+      '.discovery-dashboard-main'
+      <'
+          font-size       : 15px;
+          line-height     : 1.52;
+          background: #221F2D !important;
+          color           : #FFFFFF;
+          padding         : 0 !important;
+          --wc-split-gutter-color            : #404040;
+          --warp-view-pagination-bg-color    : #343a40 !important;
+          --warp-view-pagination-border-color: #6c757d;
+          --warp-view-datagrid-odd-bg-color  : rgba(255, 255, 255, .05);
+          --warp-view-datagrid-odd-color     : #FFFFFF;
+          --warp-view-datagrid-even-bg-color : #212529;
+          --warp-view-datagrid-even-color    : #FFFFFF;
+          --warp-view-font-color             : #FFFFFF;
+          --warp-view-chart-label-color      : #FFFFFF;
+          --gts-stack-font-color             : #FFFFFF;
+          --warp-view-resize-handle-color    : #111111;
+          --warp-view-chart-legend-bg        : #000;
+          --gts-labelvalue-font-color        : #ccc;
+          --gts-separator-font-color         : #FFFFFF;
+          --gts-labelname-font-color         : rgb(105, 223, 184);
+          --gts-classname-font-color         : #FFFFFF;
+          --warp-view-chart-legend-color     : #FFFFFF;
+          --wc-tab-header-color              : #FFFFFF;
+          --wc-tab-header-selected-color     : #404040;
+          --warp-view-input-bg-color         : #2e2b3f!important;
+          --warp-view-input-label-color      : #FFFFFF!important;
+          --warp-view-input-border-color     : #52525b!important;
+      '>
+
+      '.discovery-dashboard-main > h1, p'
+      <'
+          display: none !important;
+      '>
+
+      '.tabular-wrapper-inner'
+      <'
+          height: fit-content !important;
+      '>
+      '.input-date-range'
+      <'
+          height: 50px!important;
+          min-height: 50px!important;
+      '>
+      '.discovery-dashboard-wrapper'
+      <'
+        grid-auto-rows: minmax(50px, auto)!important;
+      '>
+    }
+  }
+  'tiles' [
+    {
+      'type' 'input:date-range'
+      'x' 0
+      'y' 0
+      'w' 12
+      'h' 1
+      'macro' <% {
+        'data' $dateRange
+        'events' [
+          { 'tags' [ 'dateRange' ] 'type' 'variable' 'selector' 'dateRange' }
+        ]
+      } %>
+    }
+    {
+      'title' ''
+      'x' 0
+      'y' 1
+      'w' 12
+      'h' 1
+      'type' 'tabular'
+      'options' { 'eventHandler' 'type=(variable),tag=dateRange' }
+      'macro' <%
+        '@TOKEN@' 'readToken' STORE
+
+        /* CONSTANTS TO DEFINE BEGIN SECTION */
+        'e04f1312-7fdb-435a-b563-c2635edc96b9' 'projectId' STORE
+        'Four n°3 - modèle' 'objectInstanceName' STORE
+        'Etat' 'attributeModelName' STORE
+        /* CONSTANTS TO DEFINE END SECTION */
+
+        $dateRange 0 GET 'startDate' STORE
+        $dateRange 1 GET 'endDate' STORE
+
+        {
+          'token' $readToken
+          'class' 'scorpio'
+          'labels' { 'project_id' $projectId 'objectInstance_name' $objectInstanceName 'attributeModel_name' $attributeModelName }
+          'count' MAXLONG
+          'end' NOW
+        } FINDSETS STACKTOLIST 1 GET 'scorpId' GET 0 GET 'scorpId' STORE
+
+        {
+          'token' $readToken
+          'class' 'scorpio'
+          'labels' { 'project_id' $projectId 'scorpId' $scorpId }
+          'start' $startDate
+          'end' $endDate
+          'boundary.pre' 1
+        } FETCH SORT 'sortedGts' STORE
+
+        $sortedGts TICKLIST 0 GET 'sortedTicklist' STORE
+        $sortedGts VALUES 0 GET 'sortedValues' STORE
+
+        0 'timeStopping' STORE
+        0 'timeStarting' STORE
+        0 'timeDefault' STORE
+        0 'timeMaintainance' STORE
+
+        // Macro that squares the value on the top of the stack
+        <%
+          'index' STORE
+          $sortedTicklist $index GET 'currentTick' STORE
+
+          <% $index 1 + $sortedTicklist SIZE < %>
+          <% $sortedTicklist $index 1 + GET 'nextTick' STORE %>
+          <% NOW 'nextTick' STORE %>
+          IFTE
+
+          <% $currentTick $startDate < %>
+          <% $nextTick $startDate - 'stateTime' STORE %>
+          <% $nextTick $currentTick - 'stateTime' STORE %>
+          IFTE
+
+          <% $sortedValues $index GET 0 == %>
+          <% $timeStopping $stateTime + 'timeStopping' STORE %>
+          IFT
+          <% $sortedValues $index GET 1 == %>
+          <% $timeStarting $stateTime + 'timeStarting' STORE %>
+          IFT
+          <% $sortedValues $index GET 2 == %>
+          <% $timeDefault $stateTime + 'timeDefault' STORE %>
+          IFT
+          <% $sortedValues $index GET 3 == %>
+          <% $timeMaintainance $stateTime + 'timeMaintainance' STORE %>
+          IFT
+        %>
+        'countTime' STORE
+        0 $sortedValues SIZE 1 - $countTime FOR
+
+        [
+          [ 'Arrêt' $timeStopping ]
+          [ 'Marche' $timeStarting ]
+          [ 'Défault' $timeDefault ]
+          [ 'Maintenance' $timeMaintainance ]
+        ] <% 1 GET %> SORTBY REVERSE <% DROP 'stateData' STORE [ $stateData 0 GET $stateData 1 GET HUMANDURATION '(.......s)' 's' REPLACEALL ] %> LMAP 'rows' STORE
+
+        {
+          'rows' $rows
+        } 'values' STORE
+
+        { 'data' $values
+          'globalParams' {
+            'tabular' {
+              'fixedWidth' true
+              'sortable' true
+            }
+          }
+        }
+      %>
+    }
+  ]
+}
