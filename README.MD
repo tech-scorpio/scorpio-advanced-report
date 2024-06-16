@@ -4,11 +4,14 @@
 
 This repository contains advanced reports that can be used in the SCorp-io platform.
 
-
-<img src="https://github.com/tech-scorpio/scorpio-advanced-reports/blob/master/assets/scorpio-designer-advanced-report.png?raw=true" alt="drawing" width="600"/> 
+## How to use reports
 
 Each advanced report is a snippet of code that can be copied and pasted in the advanced report section of the SCorp-io
 designer platform.
+
+<img src="https://github.com/tech-scorpio/scorpio-advanced-reports/blob/master/assets/scorpio-designer-advanced-report.png?raw=true" alt="drawing" width="600"/> 
+
+## Reports directory content
 
 Every advanced report is described in a README.MD file that is located in the same directory as the advanced report
 code.
@@ -16,6 +19,8 @@ code.
 <img src="https://github.com/tech-scorpio/scorpio-advanced-reports/blob/master/assets/advanced-report-directory.png?raw=true" alt="drawing" width="600"/> 
 
 The README.MD file contains a description of the report and how to use it.
+
+## Contributing
 
 Don't hesitate to contribute by adding your own advanced reports to this repository.
 
