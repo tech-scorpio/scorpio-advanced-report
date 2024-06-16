@@ -1,4 +1,4 @@
-# <img src="https://github.com/tech-scorpio/scorpio-advanced-reports/blob/master/assets/scorpio-logo-wotext.svg?raw=true" alt="drawing" width="30">  Welcome on the SCorp-io advanced report repository :smiley:
+# <img style="align-content: center;vertical-align: middle" src="https://github.com/tech-scorpio/scorpio-advanced-reports/blob/master/assets/scorpio-logo-wotext.svg?raw=true" alt="drawing" width="40">  Welcome on the SCorp-io advanced report repository :smiley:
 
 !</img>
 
