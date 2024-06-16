@@ -24,4 +24,10 @@ The README.MD file contains a description of the report and how to use it.
 
 Don't hesitate to contribute by adding your own advanced reports to this repository.
 
+The SCorp-io advanced reports are based on the Warp10 technology (Warpscript and Dsicovery).
+More information here :
+
+- https://discovery.warp10.io/
+- https://warp10.io/content/03_Documentation/04_WarpScript
+
 Enjoy reporting ! :rocket: 
