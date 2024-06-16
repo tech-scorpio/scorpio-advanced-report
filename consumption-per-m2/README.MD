@@ -1,6 +1,6 @@
 # Report description
 
-The report display a the graph of the consumption per m2 of the building. The graph is displayed in a line chart. The
+The report display a graph of the consumption per m2 of the building. The graph is displayed in a line chart. The
 x-axis represents the date and the y-axis represents the consumption per m2
 
 # How to use
