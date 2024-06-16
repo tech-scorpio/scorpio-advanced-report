@@ -24,4 +24,4 @@ The README.MD file contains a description of the report and how to use it.
 
 Don't hesitate to contribute by adding your own advanced reports to this repository.
 
-Enjoy reporting ! :fire: 
+Enjoy reporting ! :rocket: 
