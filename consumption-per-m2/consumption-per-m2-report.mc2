@@ -1,0 +1,148 @@
+ {
+  'title' ''
+  'description' ''
+  'type' 'dashboard'
+  'vars' {
+    'dateRange' [
+      NOW -6 ADDMONTHS
+      NOW
+    ]
+  }
+  'options' {
+    'scheme' 'NINETEEN_EIGHTY_FOUR'
+    'customStyles' {
+      '.discovery-tile'
+      <'
+          background-color: #3A3C4622;
+          border-radius: 50px;
+      '>
+      '.discovery-dashboard-main'
+      <'
+          font-size       : 15px;
+          line-height     : 1.52;
+          background: #221F2D !important;
+          color           : #FFFFFF;
+          --wc-split-gutter-color            : #404040;
+          --warp-view-pagination-bg-color    : #343a40 !important;
+          --warp-view-pagination-border-color: #6c757d;
+          --warp-view-datagrid-odd-bg-color  : rgba(255, 255, 255, .05);
+          --warp-view-datagrid-odd-color     : #FFFFFF;
+          --warp-view-datagrid-even-bg-color : #212529;
+          --warp-view-datagrid-even-color    : #FFFFFF;
+          --warp-view-font-color             : #FFFFFF;
+          --warp-view-chart-label-color      : #FFFFFF;
+          --gts-stack-font-color             : #FFFFFF;
+          --warp-view-resize-handle-color    : #111111;
+          --warp-view-chart-legend-bg        : #000;
+          --gts-labelvalue-font-color        : #ccc;
+          --gts-separator-font-color         : #FFFFFF;
+          --gts-labelname-font-color         : rgb(105, 223, 184);
+          --gts-classname-font-color         : rgb(126, 189, 245);
+          --warp-view-chart-legend-color     : #FFFFFF;
+          --wc-tab-header-color              : #FFFFFF;
+          --wc-tab-header-selected-color     : #404040;
+          --warp-view-input-bg-color         : #2e2b3f!important;
+          --warp-view-input-label-color      : #FFFFFF!important;
+          --warp-view-input-border-color     : #52525b!important;
+      '>
+      '.discovery-flex-main > h1'
+       <'
+        display:none
+      '>
+       '.discovery-flex-main > p'
+       <'
+        display:none
+      '>
+      '.input-date-range'
+      <'
+          height: 50px!important;
+          min-height: 50px!important;
+      '>
+      '.discovery-dashboard-wrapper'
+      <'
+        grid-auto-rows: minmax(50px, auto)!important;
+      '>
+
+    }
+  }
+  'tiles' [
+     {
+      'type' 'input:date-range'
+      'x' 0
+      'y' 0
+      'w' 12
+      'h' 1
+      'macro' <% {
+        'data' $dateRange
+        'events' [
+          { 'tags' [ 'dateRange' ] 'type' 'variable' 'selector' 'dateRange' }
+        ]
+      } %>
+    }
+    {
+      'title' ''
+      'type' 'line'
+      'x' 0
+      'y' 1
+      'w' 12
+      'h' 1
+      'timeMode' 'date'
+      'options' { 'eventHandler' 'type=(variable),tag=dateRange' }
+      'macro' <%
+       /* CONSTANTS TO DEFINE BEGIN SECTION */
+       1500 'area' STORE
+       'd7939c54-8608-4330-90c9-4cee7be655fa' 'projectId' STORE
+       'PCE - GI 055241' 'objectInstanceName' STORE
+       'GRDF' 'objectModelName' STORE
+       'Energie quotidienne' 'attributeModelName' STORE
+       /* CONSTANTS TO DEFINE END SECTION */
+       $dateRange 0 GET 'beginDate' STORE
+       $dateRange 1 GET 'endDate' STORE
+      {
+        'token' '@TOKEN@'
+        'class' 'scorpio'
+        'labels' { 'project_id' $projectId 'objectInstance_name' $objectInstanceName 'attributeModel_name' $attributeModelName }
+        'start' $beginDate
+        'end' $endDate
+        }
+      FINDSETS STACKTOLIST 1  GET 'scorpId' GET 0 GET 'consumptionScorpId'  STORE
+
+      [ $consumptionScorpId ] '|' JOIN  '~' SWAP + 'scorpIdsRegex' STORE
+
+      {
+        'token' '@TOKEN@'
+        'class' 'scorpio'
+        'labels' { 'project_id' $projectId  'scorpId' $scorpIdsRegex }
+        'start' $beginDate
+        'end' $endDate
+      }
+      FETCH 'inputs' STORE
+
+      <%
+        'input' STORE
+
+        $input 7 GET 'values' STORE // Get the values
+        $values 0 GET 'consumption' STORE
+        <% $consumption NULL != %>
+        <% $consumption TODOUBLE $area / %>
+        IFT 'consumptionByMeterSquare' STORE
+        $input 0 GET NaN NaN NaN $consumptionByMeterSquare 100 * ROUND TODOUBLE 100 /
+      %> 'mapper.consumption.by.metter.square' STORE
+      [
+        $inputs
+        $mapper.consumption.by.metter.square MACROMAPPER
+      ] MAP 'consumptionByMetterSquare' STORE $consumptionByMetterSquare
+      {
+        'data' $consumptionByMetterSquare
+        'params' [
+          { 'key' 'Consommation par m2' 'datasetColor' '#14B8A6' }
+        ]
+        'globalParams' {
+          'showLegend' true
+           'unit' 'kwh/m2'
+        }
+      }
+      %>
+    }
+  ]
+}
