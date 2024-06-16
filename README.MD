@@ -1,6 +1,6 @@
-<img style='float:left;margin-right: 10px;margin-top: 22px' src="https://github.com/tech-scorpio/scorpio-advanced-reports/blob/master/assets/scorpio-logo-wotext.svg?raw=true" alt="drawing" width="30"/> 
+# <img src="https://github.com/tech-scorpio/scorpio-advanced-reports/blob/master/assets/scorpio-logo-wotext.svg?raw=true" alt="drawing" width="30">  Welcome on the SCorp-io advanced report repository :smiley:
 
-# Welcome on the SCorp-io advanced report repository :smiley: !
+!</img>
 
 This repository contains advanced reports that can be used in the SCorp-io platform.
 
