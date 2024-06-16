@@ -10,6 +10,8 @@ designer platform.
 Every advanced report is described in a README.MD file that is located in the same directory as the advanced report
 code.
 
+![alt text](https://github.com/tech-scorpio/scorpio-advanced-reports/blob/master/assets/advanced-report-directory.png?raw=true)
+
 The README.MD file contains a description of the report and how to use it.
 
 Don't hesitate to contribute by adding your own advanced reports to this repository.
