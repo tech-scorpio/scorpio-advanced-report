@@ -1,4 +1,4 @@
-# Welcome on the SCorp-io advanced report repository
+# Welcome on the SCorp-io advanced report repository :smiley: !
 
 <img src="https://github.com/tech-scorpio/scorpio-advanced-reports/blob/master/assets/scorpio-logo-hor-noshadow-v2-blue_1.svg?raw=true" alt="drawing" width="200"/>
 
@@ -18,4 +18,4 @@ The README.MD file contains a description of the report and how to use it.
 
 Don't hesitate to contribute by adding your own advanced reports to this repository.
 
-Enjoy reporting !
+Enjoy reporting ! :fire: 
