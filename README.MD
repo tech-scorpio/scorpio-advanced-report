@@ -2,6 +2,8 @@
 
 This repository contains advanced reports that can be used in the SCorp-io platform.
 
+![alt text](https://github.com/tech-scorpio/scorpio-advanced-reports/blob/master/assets/scorpio-designer-advanced-report.png?raw=true)
+
 Each advanced report is a snippet of code that can be copied and pasted in the advanced report section of the SCorp-io
 designer platform.
 
