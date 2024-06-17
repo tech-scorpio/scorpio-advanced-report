@@ -90,11 +90,9 @@
       'options' { 'eventHandler' 'type=(variable),tag=dateRange' }
       'macro' <%
        /* CONSTANTS TO DEFINE BEGIN SECTION */
-       1500 'area' STORE
        'd7939c54-8608-4330-90c9-4cee7be655fa' 'projectId' STORE
-       'PCE - GI 055241' 'objectInstanceName' STORE
-       'GRDF' 'objectModelName' STORE
-       'Energie quotidienne' 'attributeModelName' STORE
+        'PCE - GI 055241' 'objectInstanceName' STORE
+        'Energie quotidienne' 'attributeModelName' STORE
        /* CONSTANTS TO DEFINE END SECTION */
        $dateRange 0 GET 'beginDate' STORE
        $dateRange 1 GET 'endDate' STORE
@@ -116,30 +114,69 @@
         'start' $beginDate
         'end' $endDate
       }
-      FETCH 'inputs' STORE
+      FETCH
+      [ SWAP
+          bucketizer.last
+          0
+          1 d
+          0
+      ] BUCKETIZE  -1 d TIMESHIFT  0 GET  'inputsEnergie' STORE
 
-      <%
-        'input' STORE
-
-        $input 7 GET 'values' STORE // Get the values
-        $values 0 GET 'consumption' STORE
-        <% $consumption NULL != %>
-        <% $consumption TODOUBLE $area / %>
-        IFT 'consumptionByMeterSquare' STORE
-        $input 0 GET NaN NaN NaN $consumptionByMeterSquare 100 * ROUND TODOUBLE 100 /
-      %> 'mapper.consumption.by.metter.square' STORE
-      [
-        $inputs
-        $mapper.consumption.by.metter.square MACROMAPPER
-      ] MAP 'consumptionByMetterSquare' STORE $consumptionByMetterSquare
+      'Météo' 'objectInstanceName' STORE
+      'dju-chauffage-definitif' 'attributeModelName' STORE
       {
-        'data' $consumptionByMetterSquare
+        'token' '@TOKEN@'
+        'class' 'scorpio'
+        'labels' { 'project_id' $projectId 'objectInstance_name' $objectInstanceName 'attributeModel_name' $attributeModelName }
+        'start' $beginDate
+        'end' $endDate
+      }
+      FINDSETS STACKTOLIST 1  GET 'scorpId' GET 0 GET 'djuScorpId'  STORE
+
+      [ $djuScorpId ] '|' JOIN  '~' SWAP + 'scorpIdsRegex' STORE
+
+      {
+        'token' '@TOKEN@'
+        'class' 'scorpio'
+        'labels' { 'project_id' $projectId  'scorpId' $scorpIdsRegex }
+        'start' $beginDate
+        'end' $endDate
+      }
+      FETCH
+      [ SWAP
+        bucketizer.last
+        0
+        1 d
+        0
+      ] BUCKETIZE 0 GET 'inputsDju' STORE
+
+     <%
+      'input' STORE
+        $input 7 GET 'values' STORE // Get the values
+        $values 0 GET 'energie' STORE
+        $values 1 GET 'dju' STORE
+        <% $energie NULL != $dju NULL != AND %>
+        <% $energie TODOUBLE $dju / %>
+        <% 0 %>
+        IFTE 'energieByDju' STORE
+
+        $input 0 GET NaN NaN NaN $energieByDju 100 * ROUND TODOUBLE 100 /
+      %> 'reducer.energie.by.dju' STORE
+
+      [
+        [ $inputsEnergie $inputsDju ]
+        []
+        $reducer.energie.by.dju MACROREDUCER
+      ]  REDUCE
+      'energieByDju'  STORE $energieByDju
+      {
+        'data' $energieByDju
         'params' [
-          { 'key' 'Consommation par m2' 'datasetColor' '#14B8A6' }
+          { 'key' 'Consommation par DJU' 'datasetColor' '#14B8A6' }
         ]
         'globalParams' {
           'showLegend' true
-           'unit' 'kwh/m2'
+           'unit' 'kwh/dju'
         }
       }
       %>
