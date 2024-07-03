@@ -157,7 +157,7 @@
         $values 1 GET 'dju' STORE
         <% [ $energie NULL != $dju NULL != $dju 0 != ] AND %>
         <% $energie TODOUBLE $dju / %>
-        <% 0 %>
+        <% 1 %>
         IFTE 'energieByDju' STORE
 
         $input 0 GET NaN NaN NaN $energieByDju 100 * ROUND TODOUBLE 100 /
