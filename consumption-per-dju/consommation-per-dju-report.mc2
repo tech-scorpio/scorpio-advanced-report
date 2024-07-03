@@ -90,90 +90,90 @@
       'options' { 'eventHandler' 'type=(variable),tag=dateRange' }
       'macro' <%
        /* CONSTANTS TO DEFINE BEGIN SECTION */
-       'YOUR_PROJECT_ID' 'projectId' STORE
-       'YOUR_ENERGY_OBJECT_INSTANCE_NAME' 'objectInstanceName' STORE
-       'YOUR_ENERGY_CONSUMPTION_ATTRIBUTE_MODEL_NAME' 'attributeModelName' STORE
-       /* CONSTANTS TO DEFINE END SECTION */
-       $dateRange 0 GET 'beginDate' STORE
-       $dateRange 1 GET 'endDate' STORE
-      {
-        'token' '@TOKEN@'
-        'class' 'scorpio'
-        'labels' { 'project_id' $projectId 'objectInstance_name' $objectInstanceName 'attributeModel_name' $attributeModelName }
-        'start' $beginDate
-        'end' $endDate
-        }
-      FINDSETS STACKTOLIST 1  GET 'scorpId' GET 0 GET 'consumptionScorpId'  STORE
+      'YOUR_PROJECT_ID' 'projectId' STORE
+      'YOUR_ENERGY_OBJECT_INSTANCE_NAME' 'energyObjectInstanceName' STORE
+      'YOUR_ENERGY_ATTRIBUTE_MODEL_NAME' 'attributeModelName' STORE
+      'YOUR_WEATHER_OBJECT_INSTANCE_NAME' 'meteoObjectInstanceName' STORE
+      'YOUR_DJU_HEATING_ATTRIBUTE_MODEL_NAME' 'djuAttributeModelName' STORE
+      /* CONSTANTS TO DEFINE END SECTION */
+      $dateRange 0 GET 'beginDate' STORE
+      $dateRange 1 GET 'endDate' STORE
+     {
+       'token' '@TOKEN@'
+       'class' 'scorpio'
+       'labels' { 'project_id' $projectId 'objectInstance_name' $energyObjectInstanceName 'attributeModel_name' $attributeModelName }
+       'start' $beginDate
+       'end' $endDate
+       }
+     FINDSETS STACKTOLIST 1  GET 'scorpId' GET 0 GET 'consumptionScorpId'  STORE
 
-      [ $consumptionScorpId ] '|' JOIN  '~' SWAP + 'scorpIdsRegex' STORE
+     [ $consumptionScorpId ] '|' JOIN  '~' SWAP + 'scorpIdsRegex' STORE
 
-      {
-        'token' '@TOKEN@'
-        'class' 'scorpio'
-        'labels' { 'project_id' $projectId  'scorpId' $scorpIdsRegex }
-        'start' $beginDate
-        'end' $endDate
-      }
-      FETCH
-      [ SWAP
-          bucketizer.last
-          0
-          1 d
-          0
-      ] BUCKETIZE  -1 d TIMESHIFT  0 GET  'inputsEnergie' STORE
+     {
+       'token' '@TOKEN@'
+       'class' 'scorpio'
+       'labels' { 'project_id' $projectId  'scorpId' $scorpIdsRegex }
+       'start' $beginDate
+       'end' $endDate
+     }
+     FETCH
+     [ SWAP
+         bucketizer.last
+         0
+         1 d
+         0
+     ] BUCKETIZE  -1 d TIMESHIFT  0 GET  'inputsEnergie' STORE
 
-      'Météo' 'objectInstanceName' STORE
-      'dju-chauffage-definitif' 'attributeModelName' STORE
-      {
-        'token' '@TOKEN@'
-        'class' 'scorpio'
-        'labels' { 'project_id' $projectId 'objectInstance_name' $objectInstanceName 'attributeModel_name' $attributeModelName }
-        'start' $beginDate
-        'end' $endDate
-      }
-      FINDSETS STACKTOLIST 1  GET 'scorpId' GET 0 GET 'djuScorpId'  STORE
+     {
+       'token' '@TOKEN@'
+       'class' 'scorpio'
+       'labels' { 'project_id' $projectId 'objectInstance_name' $meteoObjectInstanceName 'attributeModel_name' $djuAttributeModelName }
+       'start' $beginDate
+       'end' $endDate
+     }
+     FINDSETS STACKTOLIST 1  GET 'scorpId' GET 0 GET 'djuScorpId'  STORE
 
-      [ $djuScorpId ] '|' JOIN  '~' SWAP + 'scorpIdsRegex' STORE
+     [ $djuScorpId ] '|' JOIN  '~' SWAP + 'scorpIdsRegex' STORE
 
-      {
-        'token' '@TOKEN@'
-        'class' 'scorpio'
-        'labels' { 'project_id' $projectId  'scorpId' $scorpIdsRegex }
-        'start' $beginDate
-        'end' $endDate
-      }
-      FETCH
-      [ SWAP
-        bucketizer.last
-        0
-        1 d
-        0
-      ] BUCKETIZE 0 GET 'inputsDju' STORE
+     {
+       'token' '@TOKEN@'
+       'class' 'scorpio'
+       'labels' { 'project_id' $projectId  'scorpId' $scorpIdsRegex }
+       'start' $beginDate
+       'end' $endDate
+     }
+     FETCH
+     [ SWAP
+       bucketizer.last
+       0
+       1 d
+       0
+     ] BUCKETIZE 0 GET 'inputsDju' STORE
 
-     <%
-      'input' STORE
-        $input 7 GET 'values' STORE // Get the values
-        $values 0 GET 'energie' STORE
-        $values 1 GET 'dju' STORE
-        <% [ $energie NULL != $dju NULL != $dju 0 != ] AND %>
-        <% $energie TODOUBLE $dju / %>
-        <%
-          <% $energie NULL == $energie 0 == OR %>
-          <% 0 %>
-          <% 1 %>
-          IFTE
-        %>
-        IFTE 'energieByDju' STORE
+    <%
+     'input' STORE
+       $input 7 GET 'values' STORE // Get the values
+       $values 0 GET 'energie' STORE
+       $values 1 GET 'dju' STORE
+       <% [ $energie NULL != $dju NULL != $dju 0 != ] AND %>
+       <% $energie TODOUBLE $dju / %>
+       <%
+         <% $energie NULL == $energie 0 == OR %>
+         <% 0 %>
+         <% 1 %>
+         IFTE
+       %>
+       IFTE 'energieByDju' STORE
 
-        $input 0 GET NaN NaN NaN $energieByDju 100 * ROUND TODOUBLE 100 /
-      %> 'reducer.energie.by.dju' STORE
+       $input 0 GET NaN NaN NaN $energieByDju 100 * ROUND TODOUBLE 100 /
+     %> 'reducer.energie.by.dju' STORE
 
-      [
-        [ $inputsEnergie $inputsDju ]
-        []
-        $reducer.energie.by.dju MACROREDUCER
-      ]  REDUCE
-      'energieByDju'  STORE $energieByDju
+     [
+       [ $inputsEnergie $inputsDju ]
+       []
+       $reducer.energie.by.dju MACROREDUCER
+     ]  REDUCE
+     'energieByDju'  STORE $energieByDju
       {
         'data' $energieByDju
         'params' [
