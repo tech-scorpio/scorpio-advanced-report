@@ -88,7 +88,7 @@
       'macro' <%
         /* CONSTANTS TO DEFINE BEGIN SECTION */
         5 'nbDefaults' STORE
-        'de314c5c-e2cc-4a84-8904-0251aaf14c04' 'projectId' STORE
+        'YOUR_PROJECT_ID' 'projectId' STORE
         /* CONSTANTS TO DEFINE END SECTION */
 
         '@TOKEN@' 'readToken' STORE

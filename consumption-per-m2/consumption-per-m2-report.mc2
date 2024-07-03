@@ -91,10 +91,10 @@
       'macro' <%
        /* CONSTANTS TO DEFINE BEGIN SECTION */
        1500 'area' STORE
-       'd7939c54-8608-4330-90c9-4cee7be655fa' 'projectId' STORE
-       'PCE - GI 055241' 'objectInstanceName' STORE
-       'GRDF' 'objectModelName' STORE
-       'Energie quotidienne' 'attributeModelName' STORE
+       'YOUR_PROJECT_ID' 'projectId' STORE
+       'YOUR_ENERGY_OBJECT_INSTANCE_NAME' 'objectInstanceName' STORE
+       'YOUR_ENERGY_OBJECT_MODEL_NAME' 'objectModelName' STORE
+       'YOUR_ENERGY_CONSUMPTION_ATTRIBUTE_MODEL_NAME' 'attributeModelName' STORE
        /* CONSTANTS TO DEFINE END SECTION */
        $dateRange 0 GET 'beginDate' STORE
        $dateRange 1 GET 'endDate' STORE
