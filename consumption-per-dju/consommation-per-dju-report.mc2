@@ -155,7 +155,7 @@
         $input 7 GET 'values' STORE // Get the values
         $values 0 GET 'energie' STORE
         $values 1 GET 'dju' STORE
-        <% $energie NULL != $dju NULL != AND %>
+        <% [ $energie NULL != $dju NULL != $dju 0 != ] AND %>
         <% $energie TODOUBLE $dju / %>
         <% 0 %>
         IFTE 'energieByDju' STORE
