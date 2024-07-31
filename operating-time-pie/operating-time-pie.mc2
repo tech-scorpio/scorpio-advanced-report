@@ -1,10 +1,4 @@
 {
-  'vars' {
-    'dateRange' [
-      NOW 1 d -
-      NOW
-    ]
-  }
   'options' {
     #'scheme' 'NINETEEN_EIGHTY_FOUR'
     'customStyles' {
@@ -36,50 +30,33 @@
       <'
           height: fit-content !important;
       '>
-      '.input-date-range'
-      <'
-          height: 50px!important;
-          min-height: 50px!important;
-      '>
       '.discovery-dashboard-wrapper'
       <'
         grid-auto-rows: minmax(50px, auto)!important;
+        height: 100%!important;
       '>
     }
   }
   'tiles' [
     {
-      'type' 'input:date-range'
+      'title' ''
       'x' 0
       'y' 0
       'w' 12
-      'h' 1
-      'macro' <% {
-        'data' $dateRange
-        'events' [
-          { 'tags' [ 'dateRange' ] 'type' 'variable' 'selector' 'dateRange' }
-        ]
-      } %>
-    }
-    {
-      'title' ''
-      'x' 0
-      'y' 1
-      'w' 12
-      'h' 1
+      'h' 0
       'type' 'pie'
       'options' { 'eventHandler' 'type=(variable),tag=dateRange' }
       'macro' <%
         '@TOKEN@' 'readToken' STORE
+        @STARTDATE@ 'startDate' STORE
+        @ENDDATE@ 'endDate' STORE
 
         /* CONSTANTS TO DEFINE BEGIN SECTION */
-        'YOUR_PROJECT_ID' 'projectId' STORE
-        'YOUR_OBJECT_MODEL_NAME' 'objectInstanceName' STORE
-        'YOUR_OPERATING_STATE_ATTRIBUTE_MODEL_NAME' 'attributeModelName' STORE
+        'e04f1312-7fdb-435a-b563-c2635edc96b9' 'projectId' STORE
+        'Four n°3 - modèle' 'objectInstanceName' STORE
+        'Etat' 'attributeModelName' STORE
         /* CONSTANTS TO DEFINE END SECTION */
 
-        $dateRange 0 GET 'startDate' STORE
-        $dateRange 1 GET 'endDate' STORE
         {
           'token' $readToken
           'class' 'scorpio'
