@@ -7,6 +7,10 @@ x-axis represents the date and the y-axis represents the consumption per dju
 
 The integrator can copy the code and paste it in an advanced report in the advanced report section of the SCorp-io
 designer platform.
+
+As the macro contains the @STARTDATE@ and @ENDATE@ strings, the integrator must set the advanced report to display the
+date selector and choose a duration.
+
 Before saving the report; the integrator have to modify some constants in the macro code in order to adapt the report to
 the building he wants to display the consumption per dju.
 

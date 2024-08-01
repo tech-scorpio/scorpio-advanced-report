@@ -52,9 +52,9 @@
         @ENDDATE@ 'endDate' STORE
 
         /* CONSTANTS TO DEFINE BEGIN SECTION */
-        'e04f1312-7fdb-435a-b563-c2635edc96b9' 'projectId' STORE
-        'Four n°3 - modèle' 'objectInstanceName' STORE
-        'Etat' 'attributeModelName' STORE
+        'YOUR_PROJECT_ID' 'projectId' STORE
+        'YOUR_OBJECT_INSTANCE_NAME' 'objectInstanceName' STORE
+        'YOUR_ATTRIBUT_MODEL_NAME' 'attributeModelName' STORE
         /* CONSTANTS TO DEFINE END SECTION */
 
         {

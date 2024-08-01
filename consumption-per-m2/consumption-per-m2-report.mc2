@@ -2,12 +2,6 @@
   'title' ''
   'description' ''
   'type' 'dashboard'
-  'vars' {
-    'dateRange' [
-      NOW -6 ADDMONTHS
-      NOW
-    ]
-  }
   'options' {
     'scheme' 'NINETEEN_EIGHTY_FOUR'
     'customStyles' {
@@ -45,11 +39,11 @@
           --warp-view-input-label-color      : #FFFFFF!important;
           --warp-view-input-border-color     : #52525b!important;
       '>
-      '.discovery-flex-main > h1'
+      '.discovery-dashboard-main > h1'
        <'
         display:none
       '>
-       '.discovery-flex-main > p'
+       '.discovery-dashboard-main > p'
        <'
         display:none
       '>
@@ -66,19 +60,6 @@
     }
   }
   'tiles' [
-     {
-      'type' 'input:date-range'
-      'x' 0
-      'y' 0
-      'w' 12
-      'h' 1
-      'macro' <% {
-        'data' $dateRange
-        'events' [
-          { 'tags' [ 'dateRange' ] 'type' 'variable' 'selector' 'dateRange' }
-        ]
-      } %>
-    }
     {
       'title' ''
       'type' 'line'
@@ -89,17 +70,19 @@
       'timeMode' 'date'
       'options' { 'eventHandler' 'type=(variable),tag=dateRange' }
       'macro' <%
+       '@TOKEN@' 'readToken' STORE
+       @STARTDATE@ 'beginDate' STORE
+       @ENDDATE@ 'endDate' STORE
+
        /* CONSTANTS TO DEFINE BEGIN SECTION */
-       1500 'area' STORE
+       YOUR_AREA 'area' STORE
        'YOUR_PROJECT_ID' 'projectId' STORE
-       'YOUR_ENERGY_OBJECT_INSTANCE_NAME' 'objectInstanceName' STORE
-       'YOUR_ENERGY_OBJECT_MODEL_NAME' 'objectModelName' STORE
-       'YOUR_ENERGY_CONSUMPTION_ATTRIBUTE_MODEL_NAME' 'attributeModelName' STORE
+       'YOUR_OBJECT_INSTANCE_NAME' 'objectInstanceName' STORE
+       'YOUR_OBJECT_MODEL_NAME' 'objectModelName' STORE
+       'YOUR_ATTRIBUT_MODEL_NAME' 'attributeModelName' STORE
        /* CONSTANTS TO DEFINE END SECTION */
-       $dateRange 0 GET 'beginDate' STORE
-       $dateRange 1 GET 'endDate' STORE
       {
-        'token' '@TOKEN@'
+        'token' $readToken
         'class' 'scorpio'
         'labels' { 'project_id' $projectId 'objectInstance_name' $objectInstanceName 'attributeModel_name' $attributeModelName }
         'start' $beginDate
@@ -110,7 +93,7 @@
       [ $consumptionScorpId ] '|' JOIN  '~' SWAP + 'scorpIdsRegex' STORE
 
       {
-        'token' '@TOKEN@'
+        'token' $readToken
         'class' 'scorpio'
         'labels' { 'project_id' $projectId  'scorpId' $scorpIdsRegex }
         'start' $beginDate
