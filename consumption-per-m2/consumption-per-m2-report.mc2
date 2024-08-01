@@ -77,14 +77,14 @@
        /* CONSTANTS TO DEFINE BEGIN SECTION */
        YOUR_AREA 'area' STORE
        'YOUR_PROJECT_ID' 'projectId' STORE
-       'YOUR_OBJECT_INSTANCE_NAME' 'objectInstanceName' STORE
-       'YOUR_OBJECT_MODEL_NAME' 'objectModelName' STORE
-       'YOUR_ATTRIBUT_MODEL_NAME' 'attributeModelName' STORE
+       'YOUR_OBJECT_INSTANCE_NAME' 'energyObjectInstanceName' STORE
+       'YOUR_OBJECT_MODEL_NAME' 'energyObjectModelName' STORE
+       'YOUR_ATTRIBUT_MODEL_NAME' 'consumptionAttributeModelName' STORE
        /* CONSTANTS TO DEFINE END SECTION */
       {
         'token' $readToken
         'class' 'scorpio'
-        'labels' { 'project_id' $projectId 'objectInstance_name' $objectInstanceName 'attributeModel_name' $attributeModelName }
+        'labels' { 'project_id' $projectId 'objectInstance_name' $energyObjectInstanceName 'attributeModel_name' $consumptionAttributeModelName }
         'start' $beginDate
         'end' $endDate
         }
